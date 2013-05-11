@@ -61,6 +61,8 @@ end
 class StudentReportAnalytics
   def initialize
     @students_array = []
+    @class_average_array = []
+    @all_grades = []
     show_analytics
   end
 
@@ -96,15 +98,18 @@ class StudentReportAnalytics
       @average_array = l.chomp.split(',')
       @student_name = @average_array.shift
       @average_array.map! { |i| i.to_i }
+      @all_grades.push(@average_array)
 
       proper_name
       find_average
       assign_grade
+      class_average
 
       @report_style = "#{@student_name} #{@student_average} #{@student_grade}"
       @students_array.push([@report_style])
     end
-    report_card
+    # report_card
+    aggregate_info
   end
 
   def report_card
@@ -113,18 +118,54 @@ class StudentReportAnalytics
       for i in 0..(@students_array.length - 1)
         f. puts @students_array[i][0]
       end
+    end
   end
+
+  def class_average
+    sum = 0.0
+    @class_average_array.push(@student_average)
+    @class_average_array.each { |x| sum = sum + x }
+    @class_average = sum / @class_average_array.length
+  end
+
+  # def standard_deviation
+  #   return Math.sqrt(self.sample_variance)
+  # end
+
+  def min_max
+    find_extremes = []
+    for i in 0..(@all_grades.length - 1)
+      @all_grades[i].each { |x| find_extremes.push(x) }
+    end
+    @min = find_extremes.min
+    @max = find_extremes.max
+  end
+
+  def aggregate_info
+    puts "The average score is #{@class_average}"
+    min_max
+    puts "The min score is #{@min}"
+    puts "The max score is #{@max}"
+    # standard_deviation
+    # puts "The standard deviation is #{@class_average_array.standard_deviation}"
   end
 end
 
 # report = StudentReport.new
 analytics = StudentReportAnalytics.new
 
-# GIT "WRITE A TEXT FILE WITH GRADE DETAIL"
-# output final letter grade to a file
-#   - sorted last name to first
-#   - file contains average score (rounded to first decimal) and letter grade
-
 # GIT "REPORT OUT AGGREGATE INFO"
 # output course analytics
 #   - output average score, min score, max score and standard deviation across the class
+
+
+
+
+
+
+
+
+
+
+
+
