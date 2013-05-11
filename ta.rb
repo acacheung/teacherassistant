@@ -67,7 +67,23 @@ class StudentReportAnalytics
     @sum = 0
     @average_array.each { |x| @sum = @sum + x }
     @student_average = @sum / @average_array.length
-    puts "#{@student_name}: average score -- #{@student_average}"
+    puts @student_name
+    puts @student_average
+  end
+
+  def assign_grade
+    case @student_average
+    when 0..59
+      puts 'F'
+    when 60..69
+      puts 'D'
+    when 70..79
+      puts 'C'
+    when 80..89
+      puts 'B'
+    when 90..100
+      puts 'A'
+    end
   end
 
   def print_analytics
@@ -77,27 +93,14 @@ class StudentReportAnalytics
       @student_name = @average_array.shift
       @average_array.map! { |i| i.to_i }
       find_average
+      assign_grade
     end
   end
 
 end
 
-report = StudentReport.new
+# report = StudentReport.new
 analytics = StudentReportAnalytics.new
-
-# GIT "REPORT OUT"
-# want to know a student's average
-#   - output each student's name and average score
-
-# GIT "ASSIGN A LETTER GRADE"
-# want to know every student's final letter grade
-#   - take average score, map it to a letter grade
-#     >= 90 == "A"
-#     >= 80 == "B"
-#     >= 70 == "C"
-#     >= 60 == "D"
-#     <= 60 == "F"
-#   - output each student's letter grade
 
 # GIT "WRITE A TEXT FILE WITH GRADE DETAIL"
 # output final letter grade to a file
