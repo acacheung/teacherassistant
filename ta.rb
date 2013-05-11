@@ -60,43 +60,61 @@ end
 
 class StudentReportAnalytics
   def initialize
-    print_analytics
+    @students_array = []
+    show_analytics
+  end
+
+  def proper_name
+    @student_name = @student_name.split.reverse.join(', ')
   end
 
   def find_average
-    @sum = 0
+    @sum = 0.0
     @average_array.each { |x| @sum = @sum + x }
     @student_average = @sum / @average_array.length
-    puts @student_name
-    puts @student_average
   end
 
   def assign_grade
     case @student_average
     when 0..59
-      puts 'F'
+      @student_grade = 'F'
     when 60..69
-      puts 'D'
+      @student_grade = 'D'
     when 70..79
-      puts 'C'
+      @student_grade = 'C'
     when 80..89
-      puts 'B'
+      @student_grade = 'B'
     when 90..100
-      puts 'A'
+      @student_grade = 'A'
     end
   end
 
-  def print_analytics
+  def show_analytics
     File.foreach('example.txt') do |l|
       CSV.parse(l)
+
       @average_array = l.chomp.split(',')
       @student_name = @average_array.shift
       @average_array.map! { |i| i.to_i }
+
+      proper_name
       find_average
       assign_grade
+
+      @report_style = "#{@student_name} #{@student_average} #{@student_grade}"
+      @students_array.push([@report_style])
     end
+    report_card
   end
 
+  def report_card
+    File.open('report.txt', 'a') do |f|
+      @students_array = @students_array.sort
+      for i in 0..(@students_array.length - 1)
+        f. puts @students_array[i][0]
+      end
+  end
+  end
 end
 
 # report = StudentReport.new
