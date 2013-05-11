@@ -40,6 +40,7 @@ class StudentReport
   def add_students
     @student = Student.new
     @report << @student
+
     @formatted = @student.name.to_s + ',' + @student.grades.join(',')
     to_csv
     puts 'Add another student? (y/n)'
@@ -57,12 +58,32 @@ class StudentReport
   end
 end
 
-report = StudentReport.new
+class StudentReportAnalytics
+  def initialize
+    print_analytics
+  end
 
-# GIT "LOAD 'EM UP"
-# want to load grade data
-#   - design a csv with data from implementation details
-#   - loading csv lists students & their grades
+  def find_average
+    @sum = 0
+    @average_array.each { |x| @sum = @sum + x }
+    @student_average = @sum / @average_array.length
+    puts "#{@student_name}: average score -- #{@student_average}"
+  end
+
+  def print_analytics
+    File.foreach('example.txt') do |l|
+      CSV.parse(l)
+      @average_array = l.chomp.split(',')
+      @student_name = @average_array.shift
+      @average_array.map! { |i| i.to_i }
+      find_average
+    end
+  end
+
+end
+
+report = StudentReport.new
+analytics = StudentReportAnalytics.new
 
 # GIT "REPORT OUT"
 # want to know a student's average
