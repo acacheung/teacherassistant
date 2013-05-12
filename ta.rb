@@ -128,44 +128,46 @@ class StudentReportAnalytics
     @class_average = sum / @class_average_array.length
   end
 
-  # def standard_deviation
-  #   return Math.sqrt(self.sample_variance)
-  # end
+  def sample_variance
+    @numerator = 0
+    @find_extremes.each do |x|
+      @numerator = @numerator + (x - @class_average)*(x - @class_average)
+    end
+    @sample_variance = @numerator/(@find_extremes.length)
+  end
+
+  def standard_deviation
+    @strdev = Math.sqrt(@sample_variance)
+  end
 
   def min_max
-    find_extremes = []
+    sum = 0
+    @find_extremes = []
+
     for i in 0..(@all_grades.length - 1)
-      @all_grades[i].each { |x| find_extremes.push(x) }
+      @all_grades[i].each { |x| @find_extremes.push(x) }
     end
-    @min = find_extremes.min
-    @max = find_extremes.max
+    @min = @find_extremes.min
+    @max = @find_extremes.max
+
+    for i in 0..@find_extremes.length
+      sum = sum + i
+    end
+
+    @sum_for_strdev = sum
   end
 
   def aggregate_info
-    puts "The average score is #{@class_average}"
     min_max
-    puts "The min score is #{@min}"
-    puts "The max score is #{@max}"
-    # standard_deviation
-    # puts "The standard deviation is #{@class_average_array.standard_deviation}"
+    sample_variance
+    standard_deviation
+
+    puts "The average score is #{@class_average}."
+    puts "The min score is #{@min}."
+    puts "The max score is #{@max}."
+    puts "The standard deviation is #{@strdev}."
   end
 end
 
 # report = StudentReport.new
 analytics = StudentReportAnalytics.new
-
-# GIT "REPORT OUT AGGREGATE INFO"
-# output course analytics
-#   - output average score, min score, max score and standard deviation across the class
-
-
-
-
-
-
-
-
-
-
-
-
